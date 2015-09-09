@@ -1,6 +1,5 @@
 (function () {
   'use strict';
-
   angular.module('demoApp')
     .controller('BasicExampleCtrl', ['$scope', function ($scope) {
       $scope.remove = function (scope) {
