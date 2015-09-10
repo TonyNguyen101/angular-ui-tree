@@ -10,56 +10,97 @@
   <link rel="stylesheet" href="css/app.css">
 </head>
 
-<body ng-app="demoApp">
-<div class="container">
-  <div>
-    <div class="jumbotron">
-      <h1>Tree component</h1>
+<body>
 
-      <p class="lead">The AngularJS Tree component with drag and drop support.</p>
 
-      <p><a class="btn btn-lg btn-success" href="https://github.com/JimLiu/angular-ui-tree" role="button">Code on
-        GitHub</a></p>
+
+
+
+
+<div ng-app='testApp'>
+  <div ng-controller='RecipeApp' class="container">
+    <div ui-tree class="col-sm-7">
+      {{recipe.title}}
+      <br>
+      <img height="150" src='{{recipe.image}}'>
+      <ol ui-tree-nodes ng-model="recipe.vessels">
+        
+        <li ui-tree-node ng-repeat='vessel in recipe.vessels'>  
+        <div class='row'>
+
+          <!-- TODO: make into a big box -->
+          <div ui-tree-handle>
+            {{vessel.vesselName}}
+            <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+          </div>
+          
+          <!-- <div ui-tree class="col-sm-6"> -->
+            <ol ui-tree-nodes ng-model='vessel.actions' class="col-sm-6">
+              <li ui-tree-node ng-repeat='action in vessel.actions'>
+              <div class="row">
+                <div ui-tree-handle>
+                  {{action.actionName}}
+                  <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+                </div>
+
+                <!-- <div ui-tree class="col-sm-5"> -->
+                  <ol ui-tree-nodes ng-model='action.ingredients' class="col-sm-5">
+                    <li ui-tree-node ng-repeat='ingredient in action.ingredients'>
+                    <!-- <div > -->
+                      <div ui-tree-handle class="row">
+                        {{ingredient.imperialQuantity}}
+                        {{ingredient.imperialUnits}}                        
+                        {{ingredient.ingredientName}}
+                        <!-- Delete button -->
+                        <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span
+                            class="glyphicon glyphicon-remove"></span></a>
+
+                            <!-- TODO: modify add to include form -->
+<!--                         <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span
+                            class="glyphicon glyphicon-plus"></span></a> -->
+
+                      </div>
+                    <!-- </div>   -->
+                    </li>
+                  </ol>
+                <!-- </div> -->
+              </div>
+              </li>
+            </ol>
+          <!-- </div> -->
+        </div>
+        </li>
+      </ol>
     </div>
-
-    <div class="row">
-      <div class="col-md-4">
-        <h2>View Examples</h2>
-        <ol>
-          <li><a href="#/basic-example">Basic example</a></li>
-          <li><a href="#/filter-nodes">Filter nodes</a></li>
-          <li><a href="#/nodrop">Prevent drop</a></li>
-          <li><a href="#/connected-trees">Connected trees</a></li>
-          <li><a href="#/cloning">Cloning</a></li>
-        </ol>
-      </div>
-
-      <div class="col-md-4">
-        <h2>What?</h2>
-        <p>
-          Angular Tree is an AngularJS UI component that can sort nested lists, provides drag &amp; drop support and
-          doesn't depend on jQuery.
-        </p>
-      </div>
-      <div class="col-md-4">
-        <h2>Features</h2>
-        <ul>
-          <li>Uses the native AngularJS scope for data binding</li>
-          <li>Sorted and move items through the entire tree</li>
-          <li>Prevent elements from accepting child nodes</li>
-        </ul>
-      </div>
-    </div>
+    <div class="col-sm-5">
+      <pre class="code">{{recipe.vessels | json}}</pre>
+    </div>  
   </div>
-
-  <div class="row">
-    <div class="col-sm-12">
-      <h2>See it in action</h2>
-      <ng-view></ng-view>
-    </div>
-  </div>
-
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <!-- JavaScript -->
 <!--[if IE 8]>
@@ -80,6 +121,8 @@
 <script src="source/directives/uiTreeNode.js"></script>
 <script src="source/directives/uiTreeNodes.js"></script>
 <script src="source/services/helper.js"></script>
+
+<script src="app.js"></script>
 
 <script src="js/app.js"></script>
 <script src="js/basic-example.js"></script>
