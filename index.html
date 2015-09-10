@@ -19,62 +19,83 @@
 
 <div ng-app='testApp'>
   <div ng-controller='RecipeApp' class="container">
-    <div ui-tree class="col-sm-7">
-      {{recipe.title}}
-      <br>
-      <img height="150" src='{{recipe.image}}'>
-      <ol ui-tree-nodes ng-model="recipe.vessels">
-        
-        <li ui-tree-node ng-repeat='vessel in recipe.vessels'>  
-        <div class='row'>
+    <div ng-repeat="recipe in recipes" data-type='{{recipe.type}}'>
+      
+          <!-- Add Vessel Form: TODO hide form, temp location -->
+        <form class="col-sm-7" name="vesselForm" ng-submit="addVessel(vesselForm.$valid)" class="form-group" novalidate>
+          <input type="text" ng-model="newVessel.vesselName" class="form-control" placeholder="new vessel">
+          <input type="submit" class="btn btn-primary" ng-disabled="vesselForm.$invalid">
+        </form>
 
-          <!-- TODO: make into a big box -->
-          <div ui-tree-handle>
-            {{vessel.vesselName}}
-            <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
-          </div>
-          
-          <!-- <div ui-tree class="col-sm-6"> -->
-            <ol ui-tree-nodes ng-model='vessel.actions' class="col-sm-6">
-              <li ui-tree-node ng-repeat='action in vessel.actions'>
-              <div class="row">
-                <div ui-tree-handle>
-                  {{action.actionName}}
-                  <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+      <div ui-tree="movementOptions" class="col-sm-7">
+        <!-- TODO: hide further details in a hover div -->
+        {{recipe.title}}
+        <br>
+        <img height="150" src='{{recipe.image}}'>
+
+
+        <ol ui-tree-nodes ng-model="recipe.vessels" data-type='{{recipe.type}}'>
+          <li ui-tree-node ng-repeat='vessel in recipe.vessels' data-type='{{vessel.type}}'>  
+          <div class='row'>
+
+            <!-- TODO: make into a big box -->
+            <div ui-tree-handle>
+              {{vessel.vesselName}}
+              <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
+            </div>
+            <div ui-tree="movementOptions" class="col-sm-6">
+              <ol ui-tree-nodes ng-model='vessel.actions' class="col-sm-6" data-type='{{vessel.type}}'>
+                <li ui-tree-node ng-repeat='action in vessel.actions' data-type='{{action.type}}'>
+                <div class="row">
+                  <div ui-tree-handle>
+                    {{action.actionName}}
+                  </div>
+
+                  <div ui-tree="movementOptions" class="col-sm-5">
+                    <ol ui-tree-nodes ng-model='action.ingredients' class="col-sm-5" data-type='{{action.type}}'>
+                      <li ui-tree-node ng-repeat='ingredient in action.ingredients' data-type='{{ingredient.type}}'>
+                      <div>
+                        <div ui-tree-handle class="row" data-type='{{ingredient.type}}'>
+                          {{ingredient.imperialQuantity}}
+                          {{ingredient.imperialUnits}}                        
+                          {{ingredient.ingredientName}}
+
+
+
+                        </div>
+                      </div>  
+                      </li>
+                    </ol>
+                  </div>
+
+              <!-- New Ingredient Form TODO hide this -->
+              <form name="ingredientForm" ng-submit="addIngredient(ingredientForm.$valid)" class="form-group" novalidate>
+                <!-- TODO add inputs for units and ammount -->
+                <input type="text" ng-model="newIngredient.ingredientName" class="form-control" placeholder="new ingredient">
+                <input type="submit" class="btn btn-primary" ng-disabled="ingredientForm.$invalid">
+              </form>
+
                 </div>
+                </li>
+              </ol>
+            </div>
+      <!-- New Action Form -->
+      <!-- TODO hide this -->
+      <form name="actionForm" ng-submit="addAction(actionForm.$valid)" class="form-group" novalidate>
+        <input type="text" ng-model="newAction.actionName" class="form-control" placeholder="new action">
+        <input type="submit" class="btn btn-primary" ng-disabled="actionForm.$invalid">
+      </form>
+        
+          </div>
+          </li>
+        </ol>
+      </div>
 
-                <!-- <div ui-tree class="col-sm-5"> -->
-                  <ol ui-tree-nodes ng-model='action.ingredients' class="col-sm-5">
-                    <li ui-tree-node ng-repeat='ingredient in action.ingredients'>
-                    <!-- <div > -->
-                      <div ui-tree-handle class="row">
-                        {{ingredient.imperialQuantity}}
-                        {{ingredient.imperialUnits}}                        
-                        {{ingredient.ingredientName}}
-                        <!-- Delete button -->
-                        <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span
-                            class="glyphicon glyphicon-remove"></span></a>
-
-                            <!-- TODO: modify add to include form -->
-<!--                         <a class="pull-right btn btn-primary btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span
-                            class="glyphicon glyphicon-plus"></span></a> -->
-
-                      </div>
-                    <!-- </div>   -->
-                    </li>
-                  </ol>
-                <!-- </div> -->
-              </div>
-              </li>
-            </ol>
-          <!-- </div> -->
-        </div>
-        </li>
-      </ol>
-    </div>
     <div class="col-sm-5">
-      <pre class="code">{{recipe.vessels | json}}</pre>
+      <pre class="code">{{recipes | json}}</pre>
     </div>  
+  </div>
+
   </div>
 </div>
 
@@ -125,9 +146,12 @@
 <script src="app.js"></script>
 
 <script src="js/app.js"></script>
+
 <script src="js/basic-example.js"></script>
+
 <script src="js/filter-nodes.js"></script>
 <script src="js/cloning.js"></script>
 <script src="js/connected-trees.js"></script>
 </body>
 </html>
+ 
