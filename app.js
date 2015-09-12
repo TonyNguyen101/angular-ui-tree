@@ -76,9 +76,6 @@ app.controller('RecipeApp', ['$scope', function ($scope) {
 		accept: function (sourceNodeScope, destNodeScope, destIndex) {
 			var srcType = sourceNodeScope.$element.attr('data-type');
 			var dstType = destNodeScope.$element.attr('data-type');
-			console.log("source type " + srcType);
-			console.log("dest type " + dstType);
-			console.log(destIndex);
 			if ((srcType === "action" && dstType === "vessel") || 
 				(srcType === "ingredient" && dstType === "action") || 
 				(srcType === "vessel" && dstType === "recipe") ){

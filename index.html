@@ -78,6 +78,7 @@
         <div class="hideForm" ng-if="formVisible">
           <form name="vesselForm" ng-submit="addVessel(vesselForm.$valid)" class="form-group" novalidate>
             <input type="text" ng-model="newVessel.vesselName" class="form-control" placeholder="new vessel">
+            <input type="number" ng-model="newVessel.time" class="form-control" placeholder="duration">            
             <input type="submit" class="btn btn-primary" ng-disabled="vesselForm.$invalid" value="add">
           </form>
         </div>
