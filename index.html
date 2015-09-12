@@ -5,7 +5,9 @@
   <title>AngularJS UI Tree demo</title>
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="bower_components/bootstrap-css/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/flatly/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <!-- <link rel="stylesheet" href="bower_components/bootstrap-css/css/bootstrap.min.css"> -->
   <link rel="stylesheet" href="source/angular-ui-tree.css">
   <link rel="stylesheet" href="css/app.css">
 </head>
@@ -19,78 +21,69 @@
 
 <div ng-app='testApp'>
   <div ng-controller='RecipeApp' class="container">
-    <div ng-repeat="recipe in recipes" data-type='{{recipe.type}}'>
-      
-          <!-- Add Vessel Form: TODO hide form, temp location -->
-        <form class="col-sm-7" name="vesselForm" ng-submit="addVessel(vesselForm.$valid)" class="form-group" novalidate>
-          <input type="text" ng-model="newVessel.vesselName" class="form-control" placeholder="new vessel">
-          <input type="submit" class="btn btn-primary" ng-disabled="vesselForm.$invalid">
-        </form>
-
-      <div ui-tree="movementOptions" class="col-sm-7">
+    <div ng-repeat="recipe in recipes" data-type='{{recipe.type}}'>    
+      <div ui-tree="movementOptions" class="col-xs-7">
         <!-- TODO: hide further details in a hover div -->
-        {{recipe.title}}
+        <h3>{{recipe.title}}</h3>
+        <h4>{{recipe.totalTime}} mins</h4>
         <br>
         <img height="150" src='{{recipe.image}}'>
-
-
         <ol ui-tree-nodes ng-model="recipe.vessels" data-type='{{recipe.type}}'>
-          <li ui-tree-node ng-repeat='vessel in recipe.vessels' data-type='{{vessel.type}}'>  
-          <div class='row'>
+          <li ui-tree-node ui-tree-handle class='row vesselBox' ng-repeat='vessel in recipe.vessels' data-type='{{vessel.type}}'>  
+            <div class="time">{{vessel.time}}</div>
+            {{vessel.vesselName}}
+            <!-- <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a> -->
 
-            <!-- TODO: make into a big box -->
-            <div ui-tree-handle>
-              {{vessel.vesselName}}
-              <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a>
-            </div>
-            <div ui-tree="movementOptions" class="col-sm-6">
-              <ol ui-tree-nodes ng-model='vessel.actions' class="col-sm-6" data-type='{{vessel.type}}'>
-                <li ui-tree-node ng-repeat='action in vessel.actions' data-type='{{action.type}}'>
-                <div class="row">
-                  <div ui-tree-handle>
-                    {{action.actionName}}
-                  </div>
+            <div ui-tree="movementOptions">
+              <ol ui-tree-nodes ng-model='vessel.actions' data-type='{{vessel.type}}'>
+                <li ui-tree-node ui-tree-handle class='row actionBox' ng-repeat='action in vessel.actions' data-type='{{action.type}}'>
 
-                  <div ui-tree="movementOptions" class="col-sm-5">
-                    <ol ui-tree-nodes ng-model='action.ingredients' class="col-sm-5" data-type='{{action.type}}'>
-                      <li ui-tree-node ng-repeat='ingredient in action.ingredients' data-type='{{ingredient.type}}'>
-                      <div>
-                        <div ui-tree-handle class="row" data-type='{{ingredient.type}}'>
+                  {{action.actionName}}
+                  <!-- <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a> -->
+
+                  <div ui-tree="movementOptions">
+                    <ol ui-tree-nodes ng-model='action.ingredients' data-type='{{action.type}}'>
+                      <li ui-tree-node ui-tree-handle class="row ingredientBox" ng-repeat='ingredient in action.ingredients' data-type='{{ingredient.type}}'>
                           {{ingredient.imperialQuantity}}
                           {{ingredient.imperialUnits}}                        
                           {{ingredient.ingredientName}}
-
-
-
-                        </div>
-                      </div>  
+                          <!-- <a class="pull-right btn btn-danger btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-remove"></span></a> -->
                       </li>
                     </ol>
+                    <!-- New Ingredient Form -->
+                    <div class="hideForm" ng-if="action.formVisible">
+                      <form name="ingredientForm" ng-submit="addIngredient(ingredientForm.$valid)" class="form-group" novalidate>
+                        <!-- TODO add inputs for units and ammount -->
+                        <input type="text" ng-model="newIngredient.ingredientName" class="form-control" placeholder="new ingredient" >
+                        <input type="submit" class="btn btn-primary" ng-disabled="ingredientForm.$invalid" value="add">
+                      </form>
+                    </div>
+                    <a href="" ng-click="toggleForm(this)">New ingredient form!</a>
                   </div>
-
-              <!-- New Ingredient Form TODO hide this -->
-              <form name="ingredientForm" ng-submit="addIngredient(ingredientForm.$valid)" class="form-group" novalidate>
-                <!-- TODO add inputs for units and ammount -->
-                <input type="text" ng-model="newIngredient.ingredientName" class="form-control" placeholder="new ingredient">
-                <input type="submit" class="btn btn-primary" ng-disabled="ingredientForm.$invalid">
-              </form>
-
-                </div>
                 </li>
               </ol>
+              <!-- New Action Form -->
+              <div class="hideForm" ng-if="vessel.formVisible">
+                <form name="actionForm" ng-submit="addAction(actionForm.$valid)" class="form-group" novalidate>
+                  <input type="text" ng-model="newAction.actionName" class="form-control" placeholder="new action">
+                  <input type="submit" class="btn btn-primary" ng-disabled="actionForm.$invalid" value="add">
+                </form>
+              </div>
+              <a href="" ng-click="toggleForm(this)">New action form!</a>
             </div>
-      <!-- New Action Form -->
-      <!-- TODO hide this -->
-      <form name="actionForm" ng-submit="addAction(actionForm.$valid)" class="form-group" novalidate>
-        <input type="text" ng-model="newAction.actionName" class="form-control" placeholder="new action">
-        <input type="submit" class="btn btn-primary" ng-disabled="actionForm.$invalid">
-      </form>
-        
-          </div>
           </li>
         </ol>
-      </div>
 
+        <!-- Add Vessel Form -->
+        <div class="hideForm" ng-if="formVisible">
+          <form name="vesselForm" ng-submit="addVessel(vesselForm.$valid)" class="form-group" novalidate>
+            <input type="text" ng-model="newVessel.vesselName" class="form-control" placeholder="new vessel">
+            <input type="submit" class="btn btn-primary" ng-disabled="vesselForm.$invalid" value="add">
+          </form>
+        </div>
+        <a href="" ng-click="toggleVesselForm()">New vessel form!</a>
+
+      </div>
     <div class="col-sm-5">
       <pre class="code">{{recipes | json}}</pre>
     </div>  
@@ -129,8 +122,12 @@
 <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-shim.min.js"></script>
 <![endif]-->
 
+
 <script src="bower_components/angular/angular.min.js"></script>
 <script src="bower_components/angular-route/angular-route.min.js"></script>
+
+<!-- load Angular-AnimateJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular-animate.js"></script>
 
 <script src="source/main.js"></script>
 <script src="source/controllers/handleCtrl.js"></script>
@@ -152,6 +149,7 @@
 <script src="js/filter-nodes.js"></script>
 <script src="js/cloning.js"></script>
 <script src="js/connected-trees.js"></script>
+
 </body>
 </html>
  

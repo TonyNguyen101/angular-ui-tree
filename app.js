@@ -1,19 +1,24 @@
-var app = angular.module('testApp', ['ui.tree', 'ngRoute']);
+var app = angular.module('testApp', ['ui.tree', 'ngRoute', 'ngAnimate']);
 
 app.controller('RecipeApp', ['$scope', function ($scope) {
   $scope.recipes = [{
 		title: "Chewie Chocolate Chip Cookies",
 		type: 'recipe', 
+		formVisible: false,
 		author: "Tony Nguyen", 
 		image: "http://s3.amazonaws.com/gmi-digital-library/2ea0aafc-2942-4134-947f-847c043411ae.jpg", 
 		description: "Crisp edges, chewy middles.", 
+		totalTime: 30,
 		score: 0, 
 		vessels: [{
 			vesselName: 'small mixing bowl',
 			type: 'vessel',
+			formVisible: false,
+			time: 7,
 			actions: [{
 				actionName: "mix in",
 				type: 'action',
+				formVisible: false,
 				ingredients: [{
 					ingredientName: 'chocolate chips',
 					type: 'ingredient',
@@ -29,9 +34,12 @@ app.controller('RecipeApp', ['$scope', function ($scope) {
 		},{
 			vesselName: 'large mixing bowl',
 			type: 'vessel',
+			formVisible: false,
+			time: 20,
 			actions: [{
 				actionName: "slowly mix in",
 				type: 'action',
+				formVisible: false,
 				ingredients: [{
 					ingredientName: 'sugar',
 					type: 'ingredient',					
@@ -41,6 +49,7 @@ app.controller('RecipeApp', ['$scope', function ($scope) {
 			},{ 
 				actionName: "blend in",
 				type: 'action',
+				formVisible: false,
 				ingredients: [{
 					ingredientName: 'flour',
 					type: 'ingredient',					
@@ -50,7 +59,19 @@ app.controller('RecipeApp', ['$scope', function ($scope) {
 			}]
 		}]
 	}];
-  
+
+  $scope.toggleForm = function (scope) {
+  	var nodeData = scope.$modelValue;
+  	if (nodeData) {
+  		nodeData.formVisible = !nodeData.formVisible;
+  	}
+  };
+
+	$scope.formVisible = false;
+  $scope.toggleVesselForm = function () {
+  	$scope.formVisible = !$scope.formVisible;
+  };
+
 	$scope.movementOptions = {
 		accept: function (sourceNodeScope, destNodeScope, destIndex) {
 			var srcType = sourceNodeScope.$element.attr('data-type');
@@ -80,29 +101,28 @@ app.controller('RecipeApp', ['$scope', function ($scope) {
   };
 
   $scope.addVessel = function () {
-  	if (this.newVessel){
+  	if (this.newVessel.vesselName !== '' && this.newVessel.time !== '') {
   		this.newVessel.type = 'vessel';
+  		this.formVisible = false;
   		this.newVessel.actions = [];
 			this.recipe.vessels.push(this.newVessel);
-			console.log(this);
   		this.newVessel = '';  		
   	}
   };
   $scope.addAction = function () {
-   	if (this.newAction){
+   	if (this.newAction.actionName !== ''){
    		this.newAction.type = 'action';
+   		this.formVisible = false;
    		this.newAction.ingredients = [];
 			this.vessel.actions.push(this.newAction);
-			console.log(this);
   		this.newAction = '';  		
   	}
   };
   $scope.addIngredient = function () {
-  	if (this.newIngredient){
+  	if (this.newIngredient.ingredientName !== ''){
   		// TODO add other parts of ingredients 
   		this.newIngredient.type = 'ingredient';
 			this.action.ingredients.push(this.newIngredient);
-			console.log(this);
   		this.newIngredient = '';  		
   	}
   };
@@ -134,53 +154,6 @@ app.controller('RecipeApp', ['$scope', function ($scope) {
 }]);
 
 
-/* global $ */
-// 'use strict';
-// $(document).ready(function() {
-// 	// Vessel Section
-// 	$('.layout_sections').sortable({
-// 		containerSelector: '.layout_sections',
-// 		itemSelector: '.layout_section',
-// 		handle: '.layout_section_drag',
-// 		onStart: function (evt){
-//     	console.log("vessel sorted!" + evt);
-//     }
-// 	});
-
-// 	$('.layout_section').sortable("{onStart}", function (evt) {
-// 		console.log(evt);
-// 	});
-
-// 	// Action Section
-// 	$('.layout_rows').sortable({
-// 		group: 'layout_rows',
-// 		containerSelector: '.layout_rows',
-// 		itemSelector: '.layout_row',
-// 		handle: '.layout_row_drag',
-// 		onStart: function (evt){
-//     	console.log("action sorted!" + evt);
-//     }
-// 	});
-// 	// Ingredient Section
-// 	$('.layout_modules').sortable({
-// 		group: 'layout_modules',
-// 		onStart: function (evt){
-//     	console.log("ingredient sorted!" + evt);
-//     }
-// 	});
-// 	// $('.layout_column_edit').on('click', function() {
-// 	// 	window.alert('column options (id, class)');
-// 	// });
-// 	// $('.layout_column_add_module').on('click', function() {
-// 	// 	window.alert('add module dialog (module selection)');
-// 	// });
-// 	// $('.layout_column_add_row').on('click', function() {
-// 	// 	window.alert('add row dialog (row layout selection)');
-// 	// });
-// 	// $('.layout_column_add_section').on('click', function() {
-// 	// 	window.alert('adds a section to the list');
-// 	// });
-// });
 
 
 
